@@ -9,6 +9,8 @@ import { Modal,TextInput } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { DateTimePickerAndroid } from '@react-native-community/datetimepicker';
 import { Alert } from "react-native";
+import { Swipeable } from 'react-native-gesture-handler';
+
 
 
 
@@ -97,6 +99,11 @@ const Todo =()=>{
         setTodos(updatedTodos);
     }
 
+    const handleDelete=(id: number)=>{
+        const updatedTodos = todos.filter(todo => todo.id!==id)
+        setTodos(updatedTodos);
+    }
+
     const handleAddTask=()=>{
       if(addnewTask.trim() === '') return;
       if (!deadline) {
@@ -120,21 +127,30 @@ const Todo =()=>{
      setModalVisible(false);
     }
 
-    const renderItem=({item}: {item: TodoItem})=>(
-        <View style={styles.item}>    
-          <StatusBar barStyle={isDarkMode ? "light-content" : "dark-content"}></StatusBar>
+    const renderItem=({item}: {item: TodoItem})=>{
+       const renderRightActions=()=>{
+        return(
+            <TouchableOpacity onPress={()=>handleDelete(item.id)} style={styles.delete}>
+                <Text style={{ color: 'white', fontWeight: 'bold' }}>🗑 Delete</Text>
+             </TouchableOpacity>
+        )
+            
+       }
+        
+          return(
+            <Swipeable renderRightActions={renderRightActions}>
+              <View style={styles.item}>    
+              <StatusBar barStyle={isDarkMode ? "light-content" : "dark-content"}></StatusBar>
           
          
             <CheckBox  
-           checked={item.status}
-           onPress={()=> togglecheckBox(item.id)}
-           containerStyle={styles.checkboxstyle}
-
-  
-           checkedColor="#576ff7" 
-           uncheckedColor="#ccc"   
-           size={35}                       
-          />
+            checked={item.status}
+            onPress={()=> togglecheckBox(item.id)}
+            containerStyle={styles.checkboxstyle}
+            checkedColor="#576ff7" 
+            uncheckedColor="#ccc"   
+            size={35}                       
+            />
             <View style={{flex: 1}}>
               <Text style={styles.itemText}>{item.title}</Text> 
                
@@ -147,13 +163,17 @@ const Todo =()=>{
             </View>
        
         </View>
-    )
+        </Swipeable>
+       )
+        
+    }
 
     const itemseparator=()=>(
         <View style={styles.itemseparator}></View>
     );
 
-    return(
+   return(
+       
 
        <View style={styles.container}>
         
@@ -230,7 +250,8 @@ const Todo =()=>{
          ItemSeparatorComponent={itemseparator}
        /> 
        </View>     
-    )
+    
+   )
 };
 
 const styles = StyleSheet.create({
@@ -354,6 +375,14 @@ textdeadline:{
   color: '#fff',                   
   fontSize: 16,
   fontWeight: 'bold',
+},
+delete:{
+        backgroundColor: 'red',
+        justifyContent: 'center',
+        alignItems: 'center',
+        width: 80,
+        borderRadius: 13,
+        marginVertical: 8,
 }
   
 

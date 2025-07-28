@@ -3,7 +3,7 @@
  */
 
 import { AppRegistry } from 'react-native';
-import Todo from './Todo.tsx';
+import App from './App.tsx';
 import { name as appName } from './app.json';
 
-AppRegistry.registerComponent(appName, () => Todo);
+AppRegistry.registerComponent(appName, () => App);
