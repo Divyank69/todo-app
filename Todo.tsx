@@ -1,18 +1,28 @@
 import React, { useEffect, useState } from "react";
-import { FlatList, TouchableOpacity, useColorScheme, View } from "react-native";
-import { Text } from "react-native";
-import { StyleSheet } from "react-native";
-import { StatusBar } from "react-native";
+
+import {
+  FlatList,
+  TouchableOpacity,
+  useColorScheme,
+  View,
+  Text,
+  StatusBar,
+  Modal,
+  TextInput,
+  Alert,
+} from "react-native";
+
 import { CheckBox } from "react-native-elements";
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
-import { Modal, TextInput } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { DateTimePickerAndroid } from '@react-native-community/datetimepicker';
-import { Alert } from "react-native";
 import { Swipeable } from 'react-native-gesture-handler';
 import Toast from "react-native-root-toast";
 import { Picker } from '@react-native-picker/picker';
 
+import styles from "./src/styles/styles";
+
+import Icon from "./src/components/Icons";
 
 
 
@@ -62,8 +72,6 @@ const Todo = () => {
     Family: "#FFE761",
     Personal: "#B678FF"
   };
-
-
 
   const showTimePicker = () => {
     DateTimePickerAndroid.open({
@@ -146,9 +154,6 @@ const Todo = () => {
     setIsEditMode(true);
     setModalVisible(true);
     setSelectedCategory(category);
-
-
-
   };
 
   const handleAddTask = () => {
@@ -276,7 +281,7 @@ const Todo = () => {
     <View style={styles.container}>
 
       <View style={styles.headerrow}>
-        <Text style={styles.heading}>Today's Task 📌</Text>
+        <Text style={styles.heading}>Today's Task 📌</Text>       
         <TouchableOpacity onPress={() => setModalVisible(true)}>
           <MaterialIcons name="add-circle" size={42} color="#576ff7" style={{ marginTop: 15 }} />
         </TouchableOpacity>
@@ -319,7 +324,7 @@ const Todo = () => {
                   onValueChange={(itemValue) => setSelectedCategory(itemValue)}
                   style={{ height: 55 }}
                 >
-                  <Picker.Item label="Inbox" value="Inbox" />
+                  <Picker.Item label="Inbox" value="Inbox"/>
                   <Picker.Item label="Work" value="Work" />
                   <Picker.Item label="Shopping" value="Shopping" />
                   <Picker.Item label="Family" value="Family" />
@@ -382,147 +387,7 @@ const Todo = () => {
 }
   ;
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    paddingTop: 30,
-    paddingHorizontal: 10,
-    backgroundColor: '#fff',
-  },
-  item: {
-    flexDirection: "row",
-    alignItems: "center",
-    padding: 16,
-    backgroundColor: '#e0f7fa',
-    marginVertical: 8,
-    borderRadius: 13,
-  },
-  itemText: {
-    fontSize: 20,
-    fontWeight: '500',
-    color: '#333',
-  },
-  heading: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    paddingTop: 25,
-    marginBottom: 12,
-    color: '#333',
-  },
-  itemseparator: {
 
-    height: 1,
-    backgroundColor: "#ccc",
-    marginVertical: 8,
-  },
-
-  headerrow: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    paddingHorizontal: 10,
-
-  },
-  headingLine: {
-    height: 1,
-    backgroundColor: "#ccc",
-    marginVertical: 10,
-    marginTop: 5,
-    marginBottom: 25,
-  },
-  checkboxstyle: {
-    backgroundColor: 'transparent',
-    padding: 5,
-    margin: 2,
-    borderWidth: 0,
-    marginRight: 8,
-    marginLeft: -5
-
-  },
-  modalContainer: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: 'rgba(0,0,0,0.4)',
-  },
-  modalContent: {
-    backgroundColor: 'white',
-    padding: 20,
-    borderRadius: 12,
-    width: '85%',
-
-  },
-  modalTitle: {
-    fontSize: 25,
-    fontWeight: 'bold',
-    marginBottom: 20,
-  },
-
-  canceldonerow: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: "center",
-    paddingHorizontal: 10,
-    marginTop: 20
-  },
-  textArea: {
-
-    borderWidth: 2,
-    borderColor: '#ccc',
-    borderRadius: 10,
-    padding: 10,
-    textAlignVertical: 'top',
-    backgroundColor: 'white',
-    height: 100
-  },
-  timeRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginTop: 4,
-  },
-
-  alarmIcon: {
-    fontSize: 16,
-    marginRight: 4,
-    color: '#888',
-  },
-
-  timeText: {
-    fontSize: 15,
-    color: '#666',
-  },
-  deadlinebutton: {
-    backgroundColor: '#576ff7',
-    paddingVertical: 10,
-    paddingHorizontal: 20,
-    borderRadius: 10,
-    alignItems: 'center',
-    marginTop: 15,
-  },
-  textdeadline: {
-    color: '#fff',
-    fontSize: 16,
-    fontWeight: 'bold',
-  },
-  delete: {
-    backgroundColor: 'red',
-    justifyContent: 'center',
-    alignItems: 'center',
-    width: 80,
-    borderRadius: 13,
-    marginVertical: 8,
-  },
-  edit: {
-    backgroundColor: "#007bff",
-    justifyContent: "center",
-    alignItems: "center",
-    width: 80,
-    borderRadius: 13,
-    marginVertical: 8
-  }
-
-
-});
 
 
 export default Todo;
