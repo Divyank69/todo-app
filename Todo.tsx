@@ -10,6 +10,9 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { DateTimePickerAndroid } from '@react-native-community/datetimepicker';
 import { Alert } from "react-native";
 import { Swipeable } from 'react-native-gesture-handler';
+import Toast from "react-native-root-toast";
+import { Picker } from '@react-native-picker/picker';
+
 
 
 
@@ -17,7 +20,8 @@ type  TodoItem ={
     id: number,
     title: string,
     status: boolean, 
-    deadline?: string   
+    deadline?: string ,
+    category: 'Inbox' | 'Work' | 'Shopping' | 'Family' | 'Personal';
 }
 
 const Todo =()=>{
@@ -28,11 +32,24 @@ const Todo =()=>{
 
     const [deadline,setDeadline]=useState<Date | null>(null);
 
-    const [editedText, setEditedText] = useState('');
     const [isEditMode, setIsEditMode] = useState(false);
     const [currentEditId, setCurrentEditId] = useState<number | null>(null);
 
-    
+    const [selectedCategory, setSelectedCategory] = useState<'Inbox' | 'Work' | 'Shopping' | 'Family' | 'Personal'>('Inbox');
+
+
+    const showToast = (message: string) => {
+    Toast.show(message, {
+    duration: Toast.durations.SHORT,
+    position: Toast.positions.BOTTOM,
+    backgroundColor: '#333',  
+    textColor: '#fff',       
+    shadow: true,
+    animation: true,
+    hideOnPress: true,
+    delay: 0,
+  });
+};
 
 
      const showTimePicker = () => {
@@ -58,11 +75,11 @@ const Todo =()=>{
     // ] ;
 
      const [todos,setTodos]=useState <TodoItem[]>([
-     {id: 1,title: "Start making a presentation 🖥️",status: false},
-     {id: 2,title: "Pay for rent 💵",status: false},
-     {id: 3,title: "Buy milk 🥛", status: false,deadline: "8:00 a.m"},
-     {id: 4,title: "Dont forget to pickup michael from school 📍",status: false},
-     {id: 5,title: "Buy a chocolate for Shivam 🍫",status: false},
+     {id: 1,title: "Start making a presentation 🖥️",status: false,category: "Work"},
+     {id: 2,title: "Pay for rent 💵",status: false,category: "Personal"},
+     {id: 3,title: "Buy milk 🥛", status: false,deadline: "8:00 a.m",category: "Shopping"},
+     {id: 4,title: "Dont forget to pickup michael from school 📍",status: false,category:"Family"},
+     {id: 5,title: "Buy a chocolate for Shivam 🍫",status: false,category:"Shopping"},
     ]) ;
 
 
@@ -105,15 +122,20 @@ const Todo =()=>{
     const handleDelete=(id: number)=>{
         const updatedTodos = todos.filter(todo => todo.id!==id)
         setTodos(updatedTodos);
+        showToast('🗑️ Task deleted successfully!');
+
     }
 
-     const handleEdit = (id: number, title: string) => {
+     const handleEdit = (id: number, title: string,category: TodoItem['category']) => {
 
-       setEditedText(title);
        setAddnewTask(title);       
        setCurrentEditId(id);
        setIsEditMode(true);
        setModalVisible(true);
+       setSelectedCategory(category);
+       
+
+
     };
 
     const handleAddTask=()=>{
@@ -124,12 +146,14 @@ const Todo =()=>{
      if(isEditMode && currentEditId !==null){
       
       const updatedTodos =todos.map(todo=>
-        todo.id === currentEditId ? {...todo,title: addnewTask.trim()} : todo
+        todo.id === currentEditId ? {...todo,title: addnewTask.trim(),category: selectedCategory} : todo
       );
       setTodos(updatedTodos);
       setIsEditMode(false);
       setCurrentEditId(null);
       setModalVisible(false);
+        showToast('✏️ Task updated successfully!');
+
 
      }else{
       //Add task
@@ -144,15 +168,21 @@ const Todo =()=>{
       id: newId,
       title: addnewTask.trim(),
       status: false,
-      deadline: deadline ? deadline.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12:true }) : undefined
-
+      category: selectedCategory,
+      deadline: deadline ? deadline.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12:true }) : undefined,
+      
      };
 
      setTodos(prev=>[...prev,newTodo]);
+      
      setAddnewTask('');
      
      setDeadline(null);
      setModalVisible(false);
+     setSelectedCategory('Inbox');
+    showToast('✅ Task added successfully!');
+
+    
     }}
 
     const renderItem=({item}: {item: TodoItem})=>{
@@ -161,7 +191,7 @@ const Todo =()=>{
 
           <View style={{flexDirection : "row", gap: 5}}>
 
-            <TouchableOpacity onPress={()=>handleEdit(item.id,item.title)} style={styles.edit}>
+            <TouchableOpacity onPress={()=>handleEdit(item.id,item.title,item.category)} style={styles.edit}>
               <Text style={{ color: "white", fontWeight: 'bold',fontSize: 15}}>📝 Edit</Text>
              </TouchableOpacity>
 
@@ -241,6 +271,22 @@ const Todo =()=>{
                 value ={addnewTask}
                 onChangeText={setAddnewTask}           
                />
+
+               <Text style={{ fontWeight: 'bold', marginTop: 10,marginBottom:4,fontSize: 15 }}>Choose Category:</Text>
+                 <View style={{ borderWidth: 2, borderRadius: 8, borderColor: '#ccc', marginTop: 5 }}>
+                  <Picker
+                   selectedValue={selectedCategory}
+                   onValueChange={(itemValue) => setSelectedCategory(itemValue)}
+                   style={{ height: 55 }}
+                  >
+                <Picker.Item label="Inbox" value="Inbox" />
+                <Picker.Item label="Work" value="Work" />
+                <Picker.Item label="Shopping" value="Shopping" />
+                <Picker.Item label="Family" value="Family" />
+                <Picker.Item label="Personal" value="Personal" />
+             </Picker>
+             </View>
+
 
                {!isEditMode && (
                 <TouchableOpacity onPress={showTimePicker} style={styles.deadlinebutton}>
