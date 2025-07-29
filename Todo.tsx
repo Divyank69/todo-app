@@ -13,8 +13,6 @@ import { Swipeable } from 'react-native-gesture-handler';
 
 
 
-
-
 type  TodoItem ={
     id: number,
     title: string,
@@ -30,6 +28,12 @@ const Todo =()=>{
 
     const [deadline,setDeadline]=useState<Date | null>(null);
 
+    const [editedText, setEditedText] = useState('');
+    const [isEditMode, setIsEditMode] = useState(false);
+    const [currentEditId, setCurrentEditId] = useState<number | null>(null);
+
+    
+
 
      const showTimePicker = () => {
     DateTimePickerAndroid.open({
@@ -43,9 +47,8 @@ const Todo =()=>{
       },
     });
   };
+
    // const [showPicker,setShowPicker]=useState(false);  
-
-
     // const todos: TodoItem[] =[
     //  {id: "1",title: "Start making a presentation",status: "false"},
     //  {id: "2",title: "Pay for rent",status: "false"},
@@ -104,8 +107,32 @@ const Todo =()=>{
         setTodos(updatedTodos);
     }
 
+     const handleEdit = (id: number, title: string) => {
+
+       setEditedText(title);
+       setAddnewTask(title);       
+       setCurrentEditId(id);
+       setIsEditMode(true);
+       setModalVisible(true);
+    };
+
     const handleAddTask=()=>{
       if(addnewTask.trim() === '') return;
+
+     //Edit task
+
+     if(isEditMode && currentEditId !==null){
+      
+      const updatedTodos =todos.map(todo=>
+        todo.id === currentEditId ? {...todo,title: addnewTask.trim()} : todo
+      );
+      setTodos(updatedTodos);
+      setIsEditMode(false);
+      setCurrentEditId(null);
+      setModalVisible(false);
+
+     }else{
+      //Add task
       if (!deadline) {
        Alert.alert("Please select a deadline time.");
        return;
@@ -123,19 +150,32 @@ const Todo =()=>{
 
      setTodos(prev=>[...prev,newTodo]);
      setAddnewTask('');
+     
      setDeadline(null);
      setModalVisible(false);
-    }
+    }}
 
     const renderItem=({item}: {item: TodoItem})=>{
        const renderRightActions=()=>{
         return(
-            <TouchableOpacity onPress={()=>handleDelete(item.id)} style={styles.delete}>
-                <Text style={{ color: 'white', fontWeight: 'bold' }}>🗑 Delete</Text>
+
+          <View style={{flexDirection : "row", gap: 5}}>
+
+            <TouchableOpacity onPress={()=>handleEdit(item.id,item.title)} style={styles.edit}>
+              <Text style={{ color: "white", fontWeight: 'bold',fontSize: 15}}>📝 Edit</Text>
              </TouchableOpacity>
+
+
+ 
+            <TouchableOpacity onPress={()=>handleDelete(item.id)} style={styles.delete}>
+              <Text style={{ color: 'white', fontWeight: 'bold',fontSize: 15 }}>🗑 Delete</Text>
+             </TouchableOpacity>
+
+          </View>
+             
         )
             
-       }
+       }  
         
           return(
             <Swipeable renderRightActions={renderRightActions}>
@@ -191,7 +231,7 @@ const Todo =()=>{
          >
            <View style={styles.modalContainer}>
              <View style={styles.modalContent}>
-                <Text style={styles.modalTitle}>Add new Task</Text>
+                <Text style={styles.modalTitle}>{isEditMode ? "Edit Task" : "Add new Task"}</Text>
                
                <TextInput
                 placeholder="Enter your task here..."
@@ -202,10 +242,11 @@ const Todo =()=>{
                 onChangeText={setAddnewTask}           
                />
 
-               <TouchableOpacity onPress={showTimePicker} style={styles.deadlinebutton}>
+               {!isEditMode && (
+                <TouchableOpacity onPress={showTimePicker} style={styles.deadlinebutton}>
                 <Text style={styles.textdeadline}>📅 Add DeadLine</Text>
                </TouchableOpacity>
-
+               )}
               
 
 
@@ -225,12 +266,12 @@ const Todo =()=>{
           
 
                <View style={styles.canceldonerow}>
-                <TouchableOpacity onPress={()=>setModalVisible(false)} >
+                <TouchableOpacity onPress={()=>{setModalVisible(false), setAddnewTask(''), setIsEditMode(false), setCurrentEditId(null)} } >
                   <Text style={{color: "blue", fontWeight: '400', fontSize: 20}}>Cancel</Text>
                  </TouchableOpacity>
                  
                  <TouchableOpacity onPress={handleAddTask}>
-                  <Text style={{color: "blue", fontWeight: '600', fontSize: 20}}>Done</Text>
+                  <Text style={{color: "blue", fontWeight: '600', fontSize: 20}}>{isEditMode ? "Update" : "Done"}</Text>
                  </TouchableOpacity>
 
                 </View>    
@@ -252,7 +293,8 @@ const Todo =()=>{
        </View>     
     
    )
-};
+}
+;
 
 const styles = StyleSheet.create({
   container: {
@@ -377,12 +419,20 @@ textdeadline:{
   fontWeight: 'bold',
 },
 delete:{
-        backgroundColor: 'red',
-        justifyContent: 'center',
-        alignItems: 'center',
-        width: 80,
-        borderRadius: 13,
-        marginVertical: 8,
+  backgroundColor: 'red',
+  justifyContent: 'center',
+  alignItems: 'center',
+  width: 80,
+  borderRadius: 13,
+  marginVertical: 8,
+},
+edit:{
+  backgroundColor: "#007bff",
+   justifyContent: "center",
+   alignItems: "center",
+   width: 80,
+   borderRadius: 13,
+   marginVertical: 8
 }
   
 
