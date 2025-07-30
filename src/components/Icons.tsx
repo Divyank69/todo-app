@@ -17,9 +17,8 @@ export default function Icon({
   size = 24,
   color = '#000',
 }: IconProps) {
-    const safesize=Number(size)
+    const safesize=Number(size)  
   switch (type) {
-    
     case 'Ionicons':
       return <Ionicons name={name} size={safesize} color={color} />;
     case 'MaterialIcons':

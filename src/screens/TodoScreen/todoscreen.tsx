@@ -20,20 +20,10 @@ import { Swipeable } from 'react-native-gesture-handler';
 import Toast from "react-native-root-toast";
 import { Picker } from '@react-native-picker/picker';
 
-import styles from "./src/styles/styles";
 
-import Icon from "./src/components/Icons";
-
-
-
-type TodoItem = {
-  id: number,
-  title: string,
-  status: boolean,
-  deadline?: string,
-  category: 'Inbox' | 'Work' | 'Shopping' | 'Family' | 'Personal';
-}
-
+import styles from "../../styles/styles";
+import { TodoItem } from "../../types/todo";
+import Icon from "../../components/Icons";
 
 
 
@@ -339,23 +329,6 @@ const Todo = () => {
                 </TouchableOpacity>
               )}
 
-
-
-              {/* { showPicker &&(
-                <DateTimePicker
-                value={new Date()}
-                mode="datetime"
-                display="default"
-               onChange={(event, selectedDate) => {
-                setShowPicker(false);
-                 if (selectedDate) {
-                setDeadline(selectedDate);
-                 }
-                }}
-               />
-            )} */}
-
-
               <View style={styles.canceldonerow}>
                 <TouchableOpacity onPress={() => { setModalVisible(false), setAddnewTask(''), setIsEditMode(false), setCurrentEditId(null) }} >
                   <Text style={{ color: "blue", fontWeight: '400', fontSize: 20 }}>Cancel</Text>
@@ -384,11 +357,7 @@ const Todo = () => {
     </View>
 
   )
-}
-  ;
-
-
-
+};
 
 export default Todo;
 
