@@ -347,7 +347,7 @@ const Todo = () => {
                 renderItem={renderItem}
                 keyExtractor={(item) => item.id.toString()}
                 ItemSeparatorComponent={itemseparator}
-                ListFooterComponent={<CategoryList></CategoryList>}
+                ListFooterComponent={<CategoryList todos={todos}/>}
             />
 
         </View>

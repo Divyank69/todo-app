@@ -28,6 +28,11 @@ const categorystyles = StyleSheet.create({
     fontWeight: '600',
     color: '#fff',
   },
+  countText:{
+    color: "#fff",
+    fontSize: 13,
+    fontWeight: "400"
+  }
 });
 
 export default categorystyles;

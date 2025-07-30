@@ -1,7 +1,13 @@
 // components/CategoryList.tsx
 import React from 'react';
-import { View, Text, FlatList } from 'react-native';
+import { View, Text, FlatList, TouchableOpacity } from 'react-native';
 import categorystyles from '../../styles/CategoriesList';
+import { TodoItem } from '../../types/todo';
+
+
+type categoryListprops={
+    todos:TodoItem[];
+}
 
 const categories = [
   { id: '1', name: 'Inbox', color: '#EBEFF5' },
@@ -11,7 +17,12 @@ const categories = [
   { id: '5', name: 'Personal', color: '#B678FF' },
 ];
 
-const CategoryList = () => {
+const CategoryList = ({todos}: categoryListprops) => {
+
+    const getCount=(categoryName: string)=>{
+      return todos.filter(todo=> todo.category === categoryName).length;
+    }
+
   return (
     <View style={categorystyles.container}>
       <Text style={categorystyles.heading}>Categories</Text>
@@ -22,7 +33,10 @@ const CategoryList = () => {
         scrollEnabled={false} 
         renderItem={({ item }) => (
           <View style={[categorystyles.categoryBox, { backgroundColor: item.color }]}>
-            <Text style={[categorystyles.categoryText,(item.name === "Inbox" || item.name ==="Family") && {color: "black"}]}>{item.name}</Text>
+            <TouchableOpacity>
+              <Text style={[categorystyles.categoryText,(item.name === "Inbox" || item.name ==="Family") && {color: "black"}]}>{item.name}</Text>
+              <Text style={[categorystyles.countText,(item.name ==="Inbox" || item.name === "Family") && {color: "black"}]}>{getCount(item.name)} {getCount(item.name) <= 1 ? "task" : "tasks"}</Text>              
+            </TouchableOpacity>
           </View>
         )}
       />
