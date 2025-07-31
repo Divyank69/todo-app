@@ -150,7 +150,6 @@ const Todo = () => {
         const updatedTodos = todos.filter(todo => todo.id !== id)
         setTodos(updatedTodos);
         showToast('🗑️ Task deleted successfully!');
-
     }
 
     const handleEdit = (id: number, title: string, category: TodoItem['category']) => {
