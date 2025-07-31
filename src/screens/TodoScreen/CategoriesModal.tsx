@@ -38,7 +38,9 @@ const CategoryModal = ({ visible, onClose, category, todos }: Props) => {
                   <Text style={styles.deadlineText}>📅 {item.deadline}</Text>
                 )}
                 <View style={styles.divider}></View>
+
               </View>
+
             </View>
           )}
         />

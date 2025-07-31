@@ -8,6 +8,7 @@ import CategoryModal from './CategoriesModal';
 
 type categoryListprops = {
     todos: TodoItem[];
+    searchText: string;
 }
 
 const categories = [
@@ -20,10 +21,14 @@ const categories = [
 
 
 
-const CategoryList = ({ todos }: categoryListprops) => {
+const CategoryList = ({ todos, searchText }: categoryListprops) => {
 
     const [selectedCategory, setSelectedCategory] = useState<{ id: string; name: string; color: string } | null>(null);
     const [modalVisible, setModalVisible] = useState(false);
+
+    const filteredCategories = categories.filter((category) =>
+        category.name.toLowerCase().includes(searchText.toLowerCase())
+    );
 
     const getCount = (categoryName: string) => {
         return todos.filter(todo => todo.category === categoryName).length;
@@ -39,7 +44,7 @@ const CategoryList = ({ todos }: categoryListprops) => {
             <Text style={categorystyles.heading}>Categories</Text>
 
             <FlatList
-                data={categories}
+                data={filteredCategories}
                 keyExtractor={(item) => item.id}
                 scrollEnabled={false}
                 renderItem={({ item }) => (
