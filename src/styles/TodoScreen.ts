@@ -54,8 +54,8 @@ const styles = StyleSheet.create({
     margin: 2,
     borderWidth: 0,
     marginRight: 8,
-    marginLeft: -5
-
+    marginLeft: -5,
+  
   },
   modalContainer: {
     flex: 1,

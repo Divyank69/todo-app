@@ -3,16 +3,26 @@ import React from 'react';
 import { View, Text, FlatList, TouchableOpacity, StyleSheet, Modal } from 'react-native';
 import { TodoItem } from '../../types/todo';
 import Icon from 'react-native-vector-icons/Feather';
+import { CheckBox } from 'react-native-elements';
 
 type Props = {
   visible: boolean;
   onClose: () => void;
   category: { id: string; name: string; color: string };
   todos: TodoItem[];
+  setTodos: React.Dispatch<React.SetStateAction<TodoItem[]>>;
+
 };
 
-const CategoryModal = ({ visible, onClose, category, todos }: Props) => {
+const CategoryModal = ({ visible, onClose, category, todos,setTodos }: Props) => {
   const filteredTodos = todos.filter((todo) => todo.category === category.name);
+
+  const togglecheckBox = (id: number) => {
+        const updatedTodos = todos.map(todo =>
+            todo.id === id ? { ...todo, status: !todo.status } : todo
+        );
+        setTodos(updatedTodos);
+    }
 
   return (
     <Modal animationType="slide" visible={visible} onRequestClose={onClose}>
@@ -31,7 +41,14 @@ const CategoryModal = ({ visible, onClose, category, todos }: Props) => {
           keyExtractor={(item) => item.id.toString()}
           renderItem={({ item }) => (
             <View style={styles.todoItem}>
-              <View style={styles.checkboxCircle} />
+              <CheckBox
+                        checked={item.status}
+                        onPress={() => togglecheckBox(item.id)}
+                        containerStyle={styles.checkboxstyle}
+                        checkedColor="black"
+                        uncheckedColor="#ccc"
+                        size={35}
+                    />
               <View>
                 <Text style={styles.todoText}>{item.title}</Text>
                 {item.deadline && (
@@ -75,15 +92,7 @@ const styles = StyleSheet.create({
     alignItems: 'flex-start',
     marginBottom: 20,
   },
-  checkboxCircle: {
-    width: 20,
-    height: 20,
-    borderRadius: 10,
-    borderWidth: 1.5,
-    borderColor: '#fff',
-    marginRight: 10,
-    marginTop: 4,
-  },
+  
   todoText: {
     fontSize: 16,
     color: '#fff',
@@ -103,6 +112,14 @@ const styles = StyleSheet.create({
     height: 2,
     backgroundColor: 'rgba(255,255,255,0.2)',
     marginTop: 15,
+  },checkboxstyle: {
+    backgroundColor: 'transparent',
+    padding: 5,
+    margin: 2,
+    borderWidth: 0,
+    marginRight: 5,
+    marginLeft: -5
+
   },
  
 });

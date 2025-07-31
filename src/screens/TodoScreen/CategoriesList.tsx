@@ -9,6 +9,8 @@ import CategoryModal from './CategoriesModal';
 type categoryListprops = {
     todos: TodoItem[];
     searchText: string;
+    setTodos: React.Dispatch<React.SetStateAction<TodoItem[]>>;
+
 }
 
 const categories = [
@@ -21,7 +23,7 @@ const categories = [
 
 
 
-const CategoryList = ({ todos, searchText }: categoryListprops) => {
+const CategoryList = ({ todos, searchText,setTodos }: categoryListprops) => {
 
     const [selectedCategory, setSelectedCategory] = useState<{ id: string; name: string; color: string } | null>(null);
     const [modalVisible, setModalVisible] = useState(false);
@@ -63,6 +65,7 @@ const CategoryList = ({ todos, searchText }: categoryListprops) => {
                 onClose={() => setModalVisible(false)}
                 category={selectedCategory}
                 todos={todos}
+                setTodos={setTodos}
             />
         )}
 

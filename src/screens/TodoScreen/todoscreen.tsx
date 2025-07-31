@@ -390,6 +390,7 @@ const Todo = () => {
                 <CategoryList 
                 todos={todos} 
                 searchText={searchText}
+                setTodos={setTodos}
                 />}
             />
 
